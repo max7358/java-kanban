@@ -14,8 +14,8 @@ public class TaskManager {
 
     //Task methods
     //get all tasks
-    public HashMap<Integer, Task> getAllTasks() {
-        return tasks;
+    public ArrayList<Task> getAllTasks() {
+        return new ArrayList<>(tasks.values());
     }
 
     //delete all tasks
@@ -55,8 +55,8 @@ public class TaskManager {
     }
 
     //get all subtasks
-    public HashMap<Integer, Subtask> getAllSubtasks() {
-        return subtasks;
+    public ArrayList<Subtask> getAllSubtasks() {
+        return new ArrayList<>(subtasks.values());
     }
 
     //get subtask by id
@@ -149,8 +149,8 @@ public class TaskManager {
     }
 
     //get all epics
-    public HashMap<Integer, Epic> getAllEpics() {
-        return epics;
+    public ArrayList<Epic> getAllEpics() {
+        return new ArrayList<>(epics.values());
     }
 
     //delete all epics and all linked subtasks
@@ -166,6 +166,7 @@ public class TaskManager {
     }
 
     //delete subtasks by id
+    //private method only for "delete Epic" cases
     private void deleteSubtasksByIds(ArrayList<Integer> subtaskIds) {
         subtaskIds.forEach(subtasks::remove);
     }
