@@ -1,3 +1,7 @@
+package com.yandex.app.model;
+
+import com.yandex.app.enums.Status;
+
 public class Subtask extends Task {
 
     private int epicId;
@@ -14,7 +18,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
+        return "com.yandex.app.model.Subtask{" +
                 "name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +

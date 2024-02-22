@@ -1,3 +1,7 @@
+package com.yandex.app.model;
+
+import com.yandex.app.enums.Status;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -14,7 +18,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
+        return "com.yandex.app.model.Epic{" +
                 "name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +

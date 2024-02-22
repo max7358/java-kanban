@@ -1,5 +1,13 @@
+package com.yandex.app.service;
+
+import com.yandex.app.enums.Status;
+import com.yandex.app.model.Epic;
+import com.yandex.app.model.Subtask;
+import com.yandex.app.model.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class TaskManager {
     final private HashMap<Integer, Task> tasks;
@@ -12,9 +20,9 @@ public class TaskManager {
         epics = new HashMap<>();
     }
 
-    //Task methods
+    //com.yandex.app.model.Task methods
     //get all tasks
-    public ArrayList<Task> getAllTasks() {
+    public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
 
@@ -55,7 +63,7 @@ public class TaskManager {
     }
 
     //get all subtasks
-    public ArrayList<Subtask> getAllSubtasks() {
+    public List<Subtask> getAllSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
@@ -149,7 +157,7 @@ public class TaskManager {
     }
 
     //get all epics
-    public ArrayList<Epic> getAllEpics() {
+    public List<Epic> getAllEpics() {
         return new ArrayList<>(epics.values());
     }
 
@@ -166,7 +174,7 @@ public class TaskManager {
     }
 
     //delete subtasks by id
-    //private method only for "delete Epic" cases
+    //private method only for "delete com.yandex.app.model.Epic" cases
     private void deleteSubtasksByIds(ArrayList<Integer> subtaskIds) {
         subtaskIds.forEach(subtasks::remove);
     }
