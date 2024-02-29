@@ -4,6 +4,7 @@ import com.yandex.app.enums.Status;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
+import com.yandex.app.service.InMemoryTaskManager;
 import com.yandex.app.service.TaskManager;
 
 public class Main {
@@ -17,7 +18,7 @@ public class Main {
         Epic epic2 = new Epic("epic2", "epic description2");
 
 
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = new InMemoryTaskManager();
 
         taskManager.addTask(task1);
         Task addedTask = taskManager.addTask(task2);
