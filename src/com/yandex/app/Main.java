@@ -4,7 +4,7 @@ import com.yandex.app.enums.Status;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
-import com.yandex.app.service.InMemoryTaskManager;
+import com.yandex.app.utility.Managers;
 import com.yandex.app.service.TaskManager;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class Main {
         Epic epic2 = new Epic("epic2", "epic description2");
 
 
-        TaskManager taskManager = new InMemoryTaskManager();
+        TaskManager taskManager = Managers.getDefault();
 
         taskManager.addTask(task1);
         Task addedTask = taskManager.addTask(task2);
@@ -71,7 +71,9 @@ public class Main {
         taskManager.getSubtask(subtask1.getId());
         taskManager.getEpic(epic1.getId());
         taskManager.getTask(task2.getId());
-        List<Task> viewHistory = taskManager.getHistory();
-        System.out.println(viewHistory);
+        System.out.println("History:");
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
+        }
     }
 }
