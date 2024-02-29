@@ -7,6 +7,8 @@ import com.yandex.app.model.Task;
 import com.yandex.app.service.InMemoryTaskManager;
 import com.yandex.app.service.TaskManager;
 
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -41,8 +43,8 @@ public class Main {
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
         taskManager.addSubtask(subtask3);
-        System.out.println(taskManager.getAllSubtasks());
-        System.out.println(taskManager.getAllEpics());
+        //System.out.println(taskManager.getAllSubtasks());
+        //System.out.println(taskManager.getAllEpics());
 
         Subtask updateSubtask1 = new Subtask("subtask update1","subtask description update", subtask1.getEpicId(), Status.NEW);
         updateSubtask1.setId(subtask1.getId());
@@ -52,19 +54,24 @@ public class Main {
         taskManager.updateSubtask(updateSubtask1);
         taskManager.updateSubtask(updateSubtask2);
 
-        System.out.println(taskManager.getAllEpics());
-        System.out.println(taskManager.getEpicSubtasks(epic1.getId()));
+        //System.out.println(taskManager.getAllEpics());
+        //System.out.println(taskManager.getEpicSubtasks(epic1.getId()));
 
-        //taskManager.deleteEpicById(epic1.getId());
-        //taskManager.deleteSubtaskById(subtask2.getId());
+        //taskManager.deleteEpic(epic1.getId());
+        //taskManager.deleteSubtask(subtask2.getId());
         System.out.println("---------------------------------");
-        System.out.println(taskManager.getAllSubtasks());
+        //System.out.println(taskManager.getAllSubtasks());
 
-        //taskManager.deleteSubtaskById(subtask2.getId());
-        taskManager.deleteSubtask(subtask1.getId());
-        System.out.println(taskManager.getAllEpics());
+        //taskManager.deleteSubtask(subtask2.getId());
+        //taskManager.deleteSubtask(subtask1.getId());
+        //System.out.println(taskManager.getAllEpics());
 
-
-
+        taskManager.getTask(task1.getId());
+        taskManager.getTask(task2.getId());
+        taskManager.getSubtask(subtask1.getId());
+        taskManager.getEpic(epic1.getId());
+        taskManager.getTask(task2.getId());
+        List<Task> viewHistory = taskManager.getHistory();
+        System.out.println(viewHistory);
     }
 }

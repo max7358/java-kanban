@@ -70,4 +70,6 @@ public interface TaskManager {
 
     //return last 10 viewed tasks
     List<Task> getHistory();
+
+    void updateHistory(Task task);
 }
