@@ -61,7 +61,7 @@ public class Main {
         System.out.println(taskManager.getAllSubtasks());
 
         //taskManager.deleteSubtaskById(subtask2.getId());
-        taskManager.deleteSubtaskById(subtask1.getId());
+        taskManager.deleteSubtask(subtask1.getId());
         System.out.println(taskManager.getAllEpics());
 
 
