@@ -7,8 +7,6 @@ import com.yandex.app.model.Task;
 import com.yandex.app.utility.Managers;
 import com.yandex.app.service.TaskManager;
 
-import java.util.List;
-
 public class Main {
 
     public static void main(String[] args) {
