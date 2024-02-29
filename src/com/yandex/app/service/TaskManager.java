@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
+
+    IdGenerator idGenerator = new IdGenerator();
+
     //Task methods
     //get all tasks
     List<Task> getAllTasks();
@@ -22,10 +25,10 @@ public interface TaskManager {
     Task updateTask(Task task);
 
     //get task by id
-    Task getTask(int id);
+    Task getTaskById(int id);
 
     //delete task by id
-    Task deleteTask(int id);
+    Task deleteTaskById(int id);
 
     //subtask methods
     //add subtask, assume it can't exist w/o epic
@@ -35,13 +38,13 @@ public interface TaskManager {
     List<Subtask> getAllSubtasks();
 
     //get subtask by id
-    Task getSubtask(int id);
+    Task getSubtaskById(int id);
 
     //delete all subtasks, remove epic id link, update epic status
     void deleteAllSubtasks();
 
     //delete subtask by id, remove epic id link, update epic status
-    void deleteSubtask(int id);
+    void deleteSubtaskById(int id);
 
     //update subtask, update epic status
     Subtask updateSubtask(Subtask subtask);
@@ -51,10 +54,10 @@ public interface TaskManager {
     void addEpic(Epic epic);
 
     //get epic by id
-    Task getEpic(int id);
+    Task getEpicById(int id);
 
     //get epics subtasks
-    ArrayList<Subtask> getEpicSubtasks(int id);
+    ArrayList<Subtask> getEpicSubtasksById(int id);
 
     //get all epics
     List<Epic> getAllEpics();
@@ -63,13 +66,10 @@ public interface TaskManager {
     void deleteAllEpics();
 
     //delete epic by id and linked subtask
-    void deleteEpic(int id);
+    void deleteEpicById(int id);
 
     //update epic
     Epic updateEpic(Epic epic);
 
-    //return last 10 viewed tasks
     List<Task> getHistory();
-
-    void updateHistory(Task task);
 }

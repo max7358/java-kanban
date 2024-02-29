@@ -1,9 +1,9 @@
 package com.yandex.app.service;
 
 public class IdGenerator {
-    private static int idSeq = 0;
+    private int idSeq = 0;
 
-    public static int generateId(){
+    public int generateId() {
         return idSeq++;
     }
 }

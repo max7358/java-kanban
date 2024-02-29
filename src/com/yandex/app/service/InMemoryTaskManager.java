@@ -13,14 +13,13 @@ public class InMemoryTaskManager implements TaskManager {
     final private HashMap<Integer, Task> tasks;
     final private HashMap<Integer, Subtask> subtasks;
     final private HashMap<Integer, Epic> epics;
+    HistoryManager historyManager;
 
-    final private List<Task> viewHistory;
-
-    public InMemoryTaskManager() {
+    public InMemoryTaskManager(HistoryManager historyManager) {
         tasks = new HashMap<>();
         subtasks = new HashMap<>();
         epics = new HashMap<>();
-        viewHistory = new ArrayList<>(10);
+        this.historyManager = historyManager;
     }
 
     //Task methods
@@ -39,7 +38,7 @@ public class InMemoryTaskManager implements TaskManager {
     //add task
     @Override
     public Task addTask(Task task) {
-        task.setId(IdGenerator.generateId());
+        task.setId(idGenerator.generateId());
         tasks.put(task.getId(), task);
         return task;
     }
@@ -53,14 +52,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     //get task by id
     @Override
-    public Task getTask(int id) {
-        updateHistory(tasks.get(id));
+    public Task getTaskById(int id) {
+        historyManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
     //delete task by id
     @Override
-    public Task deleteTask(int id) {
+    public Task deleteTaskById(int id) {
         return tasks.remove(id);
     }
 
@@ -68,7 +67,7 @@ public class InMemoryTaskManager implements TaskManager {
     //add subtask, assume it can't exist w/o epic
     @Override
     public void addSubtask(Subtask subtask) {
-        subtask.setId(IdGenerator.generateId());
+        subtask.setId(idGenerator.generateId());
         epics.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
         subtasks.put(subtask.getId(), subtask);
     }
@@ -81,8 +80,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     //get subtask by id
     @Override
-    public Task getSubtask(int id) {
-        updateHistory(subtasks.get(id));
+    public Task getSubtaskById(int id) {
+        historyManager.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
@@ -101,7 +100,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //delete subtask by id, remove epic id link, update epic status
     @Override
-    public void deleteSubtask(int id) {
+    public void deleteSubtaskById(int id) {
         int epicId = subtasks.get(id).getEpicId();
         epics.get(epicId).removeSubtaskId(id);
         updateEpicStatus(epics.get(epicId));
@@ -120,21 +119,21 @@ public class InMemoryTaskManager implements TaskManager {
     //add epic
     @Override
     public void addEpic(Epic epic) {
-        epic.setId(IdGenerator.generateId());
+        epic.setId(idGenerator.generateId());
         updateEpicStatus(epic);
         epics.put(epic.getId(), epic);
     }
 
     //get epic by id
     @Override
-    public Task getEpic(int id) {
-        updateHistory(epics.get(id));
+    public Task getEpicById(int id) {
+        historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
     //get epics subtasks
     @Override
-    public ArrayList<Subtask> getEpicSubtasks(int id) {
+    public ArrayList<Subtask> getEpicSubtasksById(int id) {
         ArrayList<Subtask> epicSubtasks = new ArrayList<>();
         epics.get(id).getSubtaskIds().forEach(subId -> epicSubtasks.add(subtasks.get(subId)));
         return epicSubtasks;
@@ -192,7 +191,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //delete epic by id and linked subtask
     @Override
-    public void deleteEpic(int id) {
+    public void deleteEpicById(int id) {
         deleteSubtasksByIds(epics.get(id).getSubtaskIds());
         epics.remove(id);
     }
@@ -210,16 +209,7 @@ public class InMemoryTaskManager implements TaskManager {
         return epic;
     }
 
-    @Override
     public List<Task> getHistory() {
-        return viewHistory;
-    }
-
-    @Override
-    public void updateHistory(Task task) {
-        if (viewHistory.size() == 10) {
-            viewHistory.removeFirst();
-        }
-        viewHistory.add(task);
+        return historyManager.getHistory();
     }
 }

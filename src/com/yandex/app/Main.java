@@ -64,11 +64,11 @@ public class Main {
         //taskManager.deleteSubtask(subtask1.getId());
         //System.out.println(taskManager.getAllEpics());
 
-        taskManager.getTask(task1.getId());
-        taskManager.getTask(task2.getId());
-        taskManager.getSubtask(subtask1.getId());
-        taskManager.getEpic(epic1.getId());
-        taskManager.getTask(task2.getId());
+        taskManager.getTaskById(task1.getId());
+        taskManager.getTaskById(task2.getId());
+        taskManager.getSubtaskById(subtask1.getId());
+        taskManager.getEpicById(epic1.getId());
+        taskManager.getTaskById(task2.getId());
         System.out.println("History:");
         for (Task task : taskManager.getHistory()) {
             System.out.println(task);
