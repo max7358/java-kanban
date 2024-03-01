@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class InMemoryHistoryManagerTest {
 
     HistoryManager historyManager;
@@ -34,6 +32,21 @@ class InMemoryHistoryManagerTest {
         Assertions.assertTrue(history.contains(task1));
         Assertions.assertTrue(history.contains(epic1));
         Assertions.assertTrue(history.contains(subtask1));
+    }
+
+    @Test
+    void historyObjectUnchanged() {
+        TaskManager taskManager = Managers.getDefault();
+        Task task1 = new Task("task1", "task description1");
+        taskManager.addTask(task1);
+        taskManager.getTaskById(task1.getId());
+        List<Task> historyOld = taskManager.getHistory();
+
+        Task taskUpdate = new Task("taskUp", "task descriptionUp");
+        taskUpdate.setId(task1.getId());
+        taskManager.updateTask(taskUpdate);
+        taskManager.getTaskById(task1.getId());
+        Assertions.assertEquals(task1, historyOld.getFirst());
     }
 
     @Test
