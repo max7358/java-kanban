@@ -191,8 +191,8 @@ public class InMemoryTaskManager implements TaskManager {
     //delete all epics and all linked subtasks
     @Override
     public void deleteAllEpics() {
-        epics.values().forEach(epic -> deleteSubtasksByIds(epic.getSubtaskIds()));
         epics.clear();
+        subtasks.clear();
     }
 
     //delete epic by id and linked subtask
