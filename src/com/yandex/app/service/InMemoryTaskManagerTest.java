@@ -94,7 +94,7 @@ class InMemoryTaskManagerTest {
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
         List<Subtask> allSubtasks = taskManager.getAllSubtasks();
-        Assertions.assertEquals(2,allSubtasks.size());
+        Assertions.assertEquals(2, allSubtasks.size());
         Assertions.assertTrue(allSubtasks.contains(subtask1));
         Assertions.assertTrue(allSubtasks.contains(subtask2));
     }
@@ -110,7 +110,7 @@ class InMemoryTaskManagerTest {
         taskManager.addSubtask(subtask2);
         taskManager.deleteAllSubtasks();
         List<Subtask> allSubtasks = taskManager.getAllSubtasks();
-        Assertions.assertEquals(0,allSubtasks.size());
+        Assertions.assertEquals(0, allSubtasks.size());
     }
 
     @Test
@@ -133,17 +133,17 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(epic1, taskManager.getEpicById(epic1.getId()));
     }
 
-     @Test
+    @Test
     void getEpicSubtasksById() {
-         Epic epic1 = new Epic("epic1", "epic description1");
-         taskManager.addEpic(epic1);
+        Epic epic1 = new Epic("epic1", "epic description1");
+        taskManager.addEpic(epic1);
 
-         Subtask subtask1 = new Subtask("subtask1", "task description1", epic1.getId());
-         taskManager.addSubtask(subtask1);
+        Subtask subtask1 = new Subtask("subtask1", "task description1", epic1.getId());
+        taskManager.addSubtask(subtask1);
 
-         ArrayList<Subtask> subtasks = taskManager.getEpicSubtasksById(epic1.getId());
-         Assertions.assertEquals(subtasks.size(), 1);
-         Assertions.assertEquals(subtasks.getFirst(), subtask1);
+        ArrayList<Subtask> subtasks = taskManager.getEpicSubtasksById(epic1.getId());
+        Assertions.assertEquals(subtasks.size(), 1);
+        Assertions.assertEquals(subtasks.getFirst(), subtask1);
     }
 
     @Test
@@ -170,26 +170,25 @@ class InMemoryTaskManagerTest {
         taskManager.addSubtask(subtask2);
 
         taskManager.deleteAllEpics();
-        Assertions.assertEquals(0,taskManager.getAllEpics().size());
-        Assertions.assertEquals(0,taskManager.getAllSubtasks().size());
+        Assertions.assertEquals(0, taskManager.getAllEpics().size());
+        Assertions.assertEquals(0, taskManager.getAllSubtasks().size());
     }
 
     @Test
-    void updateEpicStatus(){
+    void updateEpicStatus() {
         Epic epic1 = new Epic("epic1", "epic description1");
-        Subtask subtask1 = new Subtask("subtask1","subtask description1", epic1.getId());
-        Subtask subtask2 = new Subtask("subtask2","subtask description2", epic1.getId());
-
         taskManager.addEpic(epic1);
         Assertions.assertEquals(NEW, taskManager.getEpicById(epic1.getId()).getStatus());
 
+        Subtask subtask1 = new Subtask("subtask1", "subtask description1", epic1.getId());
+        Subtask subtask2 = new Subtask("subtask2", "subtask description2", epic1.getId());
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
         Assertions.assertEquals(NEW, taskManager.getEpicById(epic1.getId()).getStatus());
 
-        Subtask updateSubtask1 = new Subtask("subtask update1","subtask description update", subtask1.getEpicId(), Status.NEW);
+        Subtask updateSubtask1 = new Subtask("subtask update1", "subtask description update", subtask1.getEpicId(), Status.NEW);
         updateSubtask1.setId(subtask1.getId());
-        Subtask updateSubtask2 = new Subtask("subtask update2","subtask description update", subtask2.getEpicId(), Status.DONE);
+        Subtask updateSubtask2 = new Subtask("subtask update2", "subtask description update", subtask2.getEpicId(), Status.DONE);
         updateSubtask2.setId(subtask2.getId());
         taskManager.updateSubtask(updateSubtask1);
         taskManager.updateSubtask(updateSubtask2);

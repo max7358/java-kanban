@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface TaskManager {
 
-    IdGenerator idGenerator = new IdGenerator();
-
     //Task methods
     //get all tasks
     List<Task> getAllTasks();
