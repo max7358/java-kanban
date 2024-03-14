@@ -5,9 +5,7 @@ import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     final private HashMap<Integer, Task> tasks;
@@ -33,6 +31,7 @@ public class InMemoryTaskManager implements TaskManager {
     //delete all tasks
     @Override
     public void deleteAllTasks() {
+        removeTasksFromHistory(tasks.keySet());
         tasks.clear();
     }
 
@@ -63,6 +62,7 @@ public class InMemoryTaskManager implements TaskManager {
     //delete task by id
     @Override
     public Task deleteTaskById(int id) {
+        historyManager.remove(id);
         return tasks.remove(id);
     }
 
@@ -97,9 +97,10 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(s.getEpicId());
             if (epic != null) {
                 epic.removeSubtaskId(s.getId());
-                updateEpicStatus(epics.get(s.getEpicId()));
+                updateEpicStatus(epic);
             }
         });
+        removeTasksFromHistory(subtasks.keySet());
         subtasks.clear();
     }
 
@@ -109,6 +110,7 @@ public class InMemoryTaskManager implements TaskManager {
         int epicId = subtasks.get(id).getEpicId();
         epics.get(epicId).removeSubtaskId(id);
         updateEpicStatus(epics.get(epicId));
+        historyManager.remove(id);
         subtasks.remove(id);
     }
 
@@ -192,7 +194,9 @@ public class InMemoryTaskManager implements TaskManager {
     //delete all epics and all linked subtasks
     @Override
     public void deleteAllEpics() {
+        removeTasksFromHistory(epics.keySet());
         epics.clear();
+        removeTasksFromHistory(subtasks.keySet());
         subtasks.clear();
     }
 
@@ -200,13 +204,17 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpicById(int id) {
         deleteSubtasksByIds(epics.get(id).getSubtaskIds());
+        historyManager.remove(id);
         epics.remove(id);
     }
 
     //delete subtasks by id
     //private method only for "delete com.yandex.app.model.Epic" cases
     private void deleteSubtasksByIds(ArrayList<Integer> subtaskIds) {
-        subtaskIds.forEach(subtasks::remove);
+        subtaskIds.forEach(id -> {
+            historyManager.remove(id);
+            subtasks.remove(id);
+        });
     }
 
     //update epic
@@ -218,5 +226,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    //remove tasks from history by id
+    private void removeTasksFromHistory(Set<Integer> taskIds) {
+        taskIds.forEach(historyManager::remove);
     }
 }
