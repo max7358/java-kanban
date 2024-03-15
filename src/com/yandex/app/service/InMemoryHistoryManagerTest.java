@@ -71,6 +71,22 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    void historyUpdatesWithTaskUpdate() {
+        TaskManager taskManager = Managers.getDefault();
+        Task task1 = new Task("task1", "task description1");
+        taskManager.addTask(task1);
+        taskManager.getTaskById(task1.getId());
+        Assertions.assertEquals(1, taskManager.getHistory().size());
+        Assertions.assertEquals(taskManager.getHistory().getFirst(), task1);
+        Task taskUpdate = new Task("taskUp", "task descriptionUp");
+        taskUpdate.setId(task1.getId());
+        taskManager.updateTask(taskUpdate);
+        taskManager.getTaskById(task1.getId());
+        Assertions.assertEquals(1, taskManager.getHistory().size());
+        Assertions.assertEquals(taskManager.getHistory().getFirst(), taskUpdate);
+    }
+
+    @Test
     void historyOrder() {
         TaskManager taskManager = Managers.getDefault();
         Task task1 = new Task("task1", "task description1");
