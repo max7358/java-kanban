@@ -10,8 +10,8 @@ import java.util.List;
 public class InMemoryHistoryManager implements HistoryManager {
 
     final private HashMap<Integer, Node<Task>> history;
-    Node<Task> tail;
-    Node<Task> head;
+    private Node<Task> tail;
+    private Node<Task> head;
 
     public InMemoryHistoryManager() {
         history = new HashMap<>();
