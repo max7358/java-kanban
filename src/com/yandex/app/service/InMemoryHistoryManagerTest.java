@@ -6,7 +6,6 @@ import com.yandex.app.model.Task;
 import com.yandex.app.utility.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
