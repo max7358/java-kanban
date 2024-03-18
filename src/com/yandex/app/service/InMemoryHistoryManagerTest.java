@@ -114,9 +114,6 @@ class InMemoryHistoryManagerTest {
         taskManager.getTaskById(task1.getId());
         List<Task> history = taskManager.getHistory();
         List<Task> testHistory = List.of(epic1, task2, subtask1, task3, task1);
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task);
-        }
         Assertions.assertEquals(testHistory, history);
     }
 
@@ -152,9 +149,6 @@ class InMemoryHistoryManagerTest {
 
         List<Task> history = taskManager.getHistory();
         List<Task> testHistory = List.of(task4, epic1, subtask1, task3, task1);
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task);
-        }
         Assertions.assertEquals(testHistory, history);
     }
 
