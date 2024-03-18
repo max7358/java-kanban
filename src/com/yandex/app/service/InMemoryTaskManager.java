@@ -8,9 +8,9 @@ import com.yandex.app.model.Task;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    final private HashMap<Integer, Task> tasks;
-    final private HashMap<Integer, Subtask> subtasks;
-    final private HashMap<Integer, Epic> epics;
+    private final HashMap<Integer, Task> tasks;
+    private final HashMap<Integer, Subtask> subtasks;
+    private final HashMap<Integer, Epic> epics;
     HistoryManager historyManager;
     IdGenerator idGenerator = new IdGenerator();
 
