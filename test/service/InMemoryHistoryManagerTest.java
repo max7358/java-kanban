@@ -1,8 +1,10 @@
-package com.yandex.app.service;
+package service;
 
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
+import com.yandex.app.service.HistoryManager;
+import com.yandex.app.service.TaskManager;
 import com.yandex.app.utility.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
