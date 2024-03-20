@@ -22,7 +22,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void addToHistory() {
+    void addToHistoryNoDuplicates() {
         Task task1 = new Task("task1", "task description1");
         task1.setId(1);
         Epic epic1 = new Epic("epic1", "epic description1");
@@ -32,6 +32,7 @@ class InMemoryHistoryManagerTest {
         historyManager.add(task1);
         historyManager.add(epic1);
         historyManager.add(subtask1);
+        historyManager.add(task1);
         List<Task> history = historyManager.getHistory();
         Assertions.assertEquals(3, history.size());
         Assertions.assertTrue(history.contains(task1));
@@ -89,7 +90,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void historyOrder() {
+    void historyCorrectOrderForSameTasks() {
         TaskManager taskManager = Managers.getDefault();
         Task task1 = new Task("task1", "task description1");
         Task task2 = new Task("task2", "task description2");
@@ -120,7 +121,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void historyOrderDelete() {
+    void historyOrderDeleteTask() {
         TaskManager taskManager = Managers.getDefault();
         Task task1 = new Task("task1", "task description1");
         Task task2 = new Task("task2", "task description2");
