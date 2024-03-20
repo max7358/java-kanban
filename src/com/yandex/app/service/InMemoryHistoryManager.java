@@ -9,16 +9,16 @@ import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private final HashMap<Integer, Node<Task>> history;
-    private Node<Task> tail;
-    private Node<Task> head;
+    private final HashMap<Integer, Node> history;
+    private Node tail;
+    private Node head;
 
     public InMemoryHistoryManager() {
         history = new HashMap<>();
     }
 
     public void add(Task task) {
-        Node<Task> node = history.get(task.getId());
+        Node node = history.get(task.getId());
         if (node != null) {
             removeNode(node);
         }
@@ -27,7 +27,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void linkLast(Task task) {
-        final Node<Task> node = new Node<>(tail, task, null);
+        final Node node = new Node(tail, task, null);
         if (tail != null) {
             tail.next = node;
         }
@@ -39,7 +39,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
-        Node<Task> node = head;
+        Node node = head;
         while (node != null) {
             tasks.add(node.data);
             node = node.next;
@@ -47,9 +47,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tasks;
     }
 
-    private void removeNode(Node<Task> node) {
-        Node<Task> prev = node.prev;
-        Node<Task> next = node.next;
+    private void removeNode(Node node) {
+        Node prev = node.prev;
+        Node next = node.next;
 
         if (prev == null && next == null) {
             head = null;
@@ -68,7 +68,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        Node<Task> node = history.get(id);
+        Node node = history.get(id);
         if (node != null) {
             removeNode(node);
             history.remove(id);

@@ -22,7 +22,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void add() {
+    void addToHistory() {
         Task task1 = new Task("task1", "task description1");
         task1.setId(1);
         Epic epic1 = new Epic("epic1", "epic description1");
@@ -40,7 +40,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void remove() {
+    void removeFromHistory() {
         Task task1 = new Task("task1", "task description1");
         task1.setId(1);
         Task task2 = new Task("task2", "task description2");
