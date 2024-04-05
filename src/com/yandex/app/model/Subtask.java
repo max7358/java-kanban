@@ -1,10 +1,16 @@
 package com.yandex.app.model;
 
 import com.yandex.app.enums.Status;
+import com.yandex.app.enums.Type;
 
 public class Subtask extends Task {
 
     private int epicId;
+
+    public Subtask(int id, String name, String description, int epicId, Status status) {
+        super(id, name, description, status);
+        this.epicId = epicId;
+    }
 
     public Subtask(String name, String description, int epicId, Status status) {
         super(name, description, status);
@@ -33,5 +39,10 @@ public class Subtask extends Task {
 
     public void setEpicId(int epicId) {
         this.epicId = epicId;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.SUBTASK;
     }
 }

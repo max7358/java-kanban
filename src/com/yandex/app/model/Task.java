@@ -1,6 +1,7 @@
 package com.yandex.app.model;
 
 import com.yandex.app.enums.Status;
+import com.yandex.app.enums.Type;
 
 import java.util.Objects;
 
@@ -9,6 +10,13 @@ public class Task {
     private String description;
     private int id;
     private Status status;
+
+    public Task(int id, String name, String description, Status status) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
 
     public Task(String name, String description, Status status) {
         this.name = name;
@@ -77,4 +85,7 @@ public class Task {
         this.status = status;
     }
 
+    public Type getType() {
+        return Type.TASK;
+    }
 }
