@@ -30,7 +30,7 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         List<Task> allTasks = taskManager.getAllTasks();
-        Assertions.assertEquals(allTasks.size(), 2);
+        Assertions.assertEquals(2, allTasks.size());
         Assertions.assertTrue(allTasks.contains(task1));
         Assertions.assertTrue(allTasks.contains(task2));
     }
@@ -43,7 +43,7 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task2);
         taskManager.deleteAllTasks();
         List<Task> allTasks = taskManager.getAllTasks();
-        Assertions.assertEquals(allTasks.size(), 0);
+        Assertions.assertEquals(0, allTasks.size());
     }
 
     @Test
@@ -143,7 +143,7 @@ class InMemoryTaskManagerTest {
         taskManager.addSubtask(subtask1);
 
         ArrayList<Subtask> subtasks = taskManager.getEpicSubtasksById(epic1.getId());
-        Assertions.assertEquals(subtasks.size(), 1);
+        Assertions.assertEquals(1, subtasks.size());
         Assertions.assertEquals(subtasks.getFirst(), subtask1);
     }
 

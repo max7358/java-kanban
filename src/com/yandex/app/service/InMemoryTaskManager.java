@@ -8,17 +8,21 @@ import com.yandex.app.model.Task;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, Subtask> subtasks;
-    private final HashMap<Integer, Epic> epics;
+    protected final HashMap<Integer, Task> tasks;
+    protected final HashMap<Integer, Subtask> subtasks;
+    protected final HashMap<Integer, Epic> epics;
     HistoryManager historyManager;
-    IdGenerator idGenerator = new IdGenerator();
+    protected int idSeq = 0;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         tasks = new HashMap<>();
         subtasks = new HashMap<>();
         epics = new HashMap<>();
         this.historyManager = historyManager;
+    }
+
+    private int generateId() {
+        return ++idSeq;
     }
 
     //Task methods
@@ -38,7 +42,7 @@ public class InMemoryTaskManager implements TaskManager {
     //add task
     @Override
     public Task addTask(Task task) {
-        task.setId(idGenerator.generateId());
+        task.setId(generateId());
         tasks.put(task.getId(), task);
         return task;
     }
@@ -70,9 +74,10 @@ public class InMemoryTaskManager implements TaskManager {
     //add subtask, assume it can't exist w/o epic
     @Override
     public void addSubtask(Subtask subtask) {
-        subtask.setId(idGenerator.generateId());
+        subtask.setId(generateId());
         epics.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
         subtasks.put(subtask.getId(), subtask);
+        updateEpicStatus(epics.get(subtask.getEpicId()));
     }
 
     //get all subtasks
@@ -126,7 +131,7 @@ public class InMemoryTaskManager implements TaskManager {
     //add epic
     @Override
     public void addEpic(Epic epic) {
-        epic.setId(idGenerator.generateId());
+        epic.setId(generateId());
         updateEpicStatus(epic);
         epics.put(epic.getId(), epic);
     }
