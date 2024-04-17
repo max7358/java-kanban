@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private static final String CSV_FILE_NAME = "src/resources/taskManagerData.csv";
-    private static final String CSV_TITLE = "id,type,name,status,description,epic";
+    private static final String CSV_TITLE = "id,type,name,status,description,duration,startTime,epic";
     private final Path path;
 
     public FileBackedTaskManager(HistoryManager historyManager, Path path) {
@@ -101,12 +103,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = strings[2];
         Status status = Status.valueOf(strings[3]);
         String description = strings[4];
+        Duration duration = Duration.ofMinutes(Integer.parseInt(strings[5]));
+        ZonedDateTime startTime = strings[6].equals("null") ? null : ZonedDateTime.parse(strings[6]);
         Task task = null;
         switch (type) {
-            case TASK -> task = new Task(Integer.parseInt(id), name, description, status);
-            case EPIC -> task = new Epic(Integer.parseInt(id), name, description, status);
+            case TASK -> task = new Task(Integer.parseInt(id), name, description, status, duration, startTime);
+            case EPIC -> task = new Epic(Integer.parseInt(id), name, description, status, duration, startTime);
             case SUBTASK ->
-                    task = new Subtask(Integer.parseInt(id), name, description, Integer.parseInt(strings[5]), status);
+                    task = new Subtask(Integer.parseInt(id), name, description, Integer.parseInt(strings[7]), status, duration, startTime);
         }
         return task;
     }
@@ -145,7 +149,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 .append(task.getType()).append(",")
                 .append(task.getName()).append(",")
                 .append(task.getStatus()).append(",")
-                .append(task.getDescription()).append(",");
+                .append(task.getDescription()).append(",")
+                .append(task.getDuration().toMinutes()).append(",")
+                .append(task.getStartTime()).append(",");
         if (task.getType() == Type.SUBTASK) {
             sb.append(((Subtask) task).getEpicId());
         }

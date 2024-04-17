@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -199,5 +202,36 @@ class InMemoryTaskManagerTest {
         updateSubtask1.setStatus(DONE);
         taskManager.updateSubtask(updateSubtask1);
         Assertions.assertEquals(DONE, taskManager.getEpicById(epic1.getId()).getStatus());
+    }
+
+    @Test
+    void task_endTime_calculation() {
+        ZonedDateTime dateTime = ZonedDateTime.of(2024, 2, 28, 23, 20, 0, 0, ZoneOffset.UTC);
+        ZonedDateTime expectedDateTime = ZonedDateTime.of(2024, 2, 29, 0, 21, 0, 0, ZoneOffset.UTC);
+        Task task = new Task("task1", "task description", Status.NEW, Duration.ofMinutes(61), dateTime);
+        Assertions.assertEquals(expectedDateTime, task.getEndTime());
+    }
+
+    @Test
+    void epic_time_calculation() {
+        ZonedDateTime dateTime = ZonedDateTime.of(2024, 2, 28, 23, 20, 0, 0, ZoneOffset.UTC);
+        Epic epic = new Epic("epic1", "task description");
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask("subtask1", "task description 1", epic.getId(),
+                Status.NEW, Duration.ofMinutes(10), dateTime.minusHours(1));
+        Subtask subtask2 = new Subtask("subtask2", "task description 1", epic.getId(),
+                Status.IN_PROGRESS, Duration.ofMinutes(25), dateTime.plusHours(2));
+        Subtask subtask3 = new Subtask("subtask3", "task description 1", epic.getId(),
+                Status.DONE);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+        taskManager.addSubtask(subtask3);
+
+        ZonedDateTime expectedStartTime = ZonedDateTime.of(2024, 2, 28, 22, 20, 0, 0, ZoneOffset.UTC);
+        ZonedDateTime expectedEndTime = ZonedDateTime.of(2024, 2, 29, 1, 45, 0, 0, ZoneOffset.UTC);
+        Assertions.assertEquals(expectedStartTime, epic.getStartTime());
+        Assertions.assertEquals(expectedEndTime, epic.getEndTime());
+        Assertions.assertEquals(Duration.ofMinutes(205), epic.getDuration());
     }
 }

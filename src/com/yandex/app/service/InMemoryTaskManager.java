@@ -5,6 +5,7 @@ import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -78,6 +79,9 @@ public class InMemoryTaskManager implements TaskManager {
         epics.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
         subtasks.put(subtask.getId(), subtask);
         updateEpicStatus(epics.get(subtask.getEpicId()));
+        if (subtask.getStartTime() != null) {
+            calculateEpicDuration(epics.get(subtask.getEpicId()));
+        }
     }
 
     //get all subtasks
@@ -188,6 +192,19 @@ public class InMemoryTaskManager implements TaskManager {
             }
             epic.setStatus(status);
         }
+    }
+
+    //start - earliest subtask, end - latest subtask, duration - between start/end
+    private void calculateEpicDuration(Epic epic) {
+        List<ZonedDateTime> startTimes = new ArrayList<>();
+        List<ZonedDateTime> endTimes = new ArrayList<>();
+        epic.getSubtaskIds().stream().map(subtasks::get).filter(subtask -> subtask.getStartTime() != null).forEach(subtask -> {
+            startTimes.add(subtask.getStartTime());
+            endTimes.add(subtask.getEndTime());
+        });
+        Collections.sort(startTimes);
+        Collections.sort(endTimes);
+        epic.calculateTime(startTimes.getFirst(), endTimes.getLast());
     }
 
     //get all epics

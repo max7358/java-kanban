@@ -1,5 +1,5 @@
-id,type,name,status,description,epic
-1,TASK,new task,NEW,task description,
-2,EPIC,new epic,NEW,task description,
-3,SUBTASK,new subtask,NEW,task description 1,2
+id,type,name,status,description,duration,startTime,epic
+1,TASK,new task,NEW,task description,25,2024-04-03T08:01:10Z,
+2,EPIC,new epic,NEW,task description,0,null,
+3,SUBTASK,new subtask,NEW,task description 1,0,null,2
 

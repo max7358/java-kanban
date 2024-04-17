@@ -3,6 +3,8 @@ package com.yandex.app.model;
 import com.yandex.app.enums.Status;
 import com.yandex.app.enums.Type;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -10,24 +12,41 @@ public class Task {
     private String description;
     private int id;
     private Status status;
+    private Duration duration;
+    private ZonedDateTime startTime;
 
     public Task(int id, String name, String description, Status status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
+        this.duration = Duration.ofSeconds(0);
     }
 
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.duration = Duration.ofSeconds(0);
     }
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
+        this.duration = Duration.ofSeconds(0);
+    }
+
+    public Task(String name, String description, Status status, Duration duration, ZonedDateTime startTime) {
+        this(name, description, status);
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public Task(int id, String name, String description, Status status, Duration duration, ZonedDateTime startTime) {
+        this(id, name, description, status);
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     @Override
@@ -45,6 +64,8 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", status=" + status +
+                ", duration=" + duration +
+                ", startTime=" + startTime +
                 '}';
     }
 
@@ -87,5 +108,25 @@ public class Task {
 
     public Type getType() {
         return Type.TASK;
+    }
+
+    public ZonedDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public ZonedDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(ZonedDateTime startTime) {
+        this.startTime = startTime;
     }
 }

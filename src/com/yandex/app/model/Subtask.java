@@ -3,6 +3,9 @@ package com.yandex.app.model;
 import com.yandex.app.enums.Status;
 import com.yandex.app.enums.Type;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
+
 public class Subtask extends Task {
 
     private int epicId;
@@ -22,6 +25,16 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
+    public Subtask(String name, String description, int epicId, Status status, Duration duration, ZonedDateTime startTime) {
+        super(name, description, status, duration, startTime);
+        this.epicId = epicId;
+    }
+
+    public Subtask(int id, String name, String description, int epicId, Status status, Duration duration, ZonedDateTime startTime) {
+        super(id, name, description, status, duration, startTime);
+        this.epicId = epicId;
+    }
+
     @Override
     public String toString() {
         return "com.yandex.app.model.Subtask{" +
@@ -30,6 +43,8 @@ public class Subtask extends Task {
                 ", id=" + getId() +
                 ", epicId=" + epicId +
                 ", status=" + getStatus() +
+                ", duration=" + getDuration() +
+                ", startTime=" + getStartTime() +
                 '}';
     }
 
