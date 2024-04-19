@@ -147,7 +147,6 @@ class InMemoryHistoryManagerTest {
         taskManager.deleteTaskById(task2.getId());
         taskManager.getTaskById(task3.getId());
         taskManager.getTaskById(task1.getId());
-        taskManager.deleteTaskById(task2.getId());
         taskManager.getTaskById(task1.getId());
 
         List<Task> history = taskManager.getHistory();
