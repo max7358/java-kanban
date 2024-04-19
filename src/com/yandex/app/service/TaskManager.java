@@ -55,7 +55,7 @@ public interface TaskManager {
     Task getEpicById(int id);
 
     //get epics subtasks
-    ArrayList<Subtask> getEpicSubtasksById(int id);
+    List<Subtask> getEpicSubtasksById(int id);
 
     //get all epics
     List<Epic> getAllEpics();
@@ -70,4 +70,6 @@ public interface TaskManager {
     Epic updateEpic(Epic epic);
 
     List<Task> getHistory();
+
+    List<Task> getPrioritisedTasks();
 }

@@ -1,6 +1,8 @@
 package com.yandex.app.service;
 
 import com.yandex.app.enums.Status;
+import com.yandex.app.exception.NotFoundException;
+import com.yandex.app.exception.ValidationException;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
@@ -14,6 +16,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Epic> epics;
     HistoryManager historyManager;
     protected int idSeq = 0;
+
+    TreeSet<Task> prioritisedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         tasks = new HashMap<>();
@@ -44,8 +48,17 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task addTask(Task task) {
         task.setId(generateId());
+        if (task.getStartTime() != null) {
+            prioritisedTasks.forEach(tsk -> validateTasksIntercept(tsk, task));
+            prioritisedTasks.add(task);
+        }
         tasks.put(task.getId(), task);
         return task;
+    }
+
+    private void validateTasksIntercept(Task existingTask, Task newTask) {
+        if (newTask.getStartTime().isBefore(existingTask.getEndTime()) && newTask.getEndTime().isAfter(existingTask.getStartTime()))
+            throw new ValidationException("Error: task id:" + newTask.getId() + " - " + newTask.getStartTime() + " : " + newTask.getEndTime() + "\nintercepts with existing task id:" + existingTask.getId() + " - " + existingTask.getStartTime() + " : " + existingTask.getEndTime());
     }
 
     //update task
@@ -58,10 +71,9 @@ public class InMemoryTaskManager implements TaskManager {
     //get task by id
     @Override
     public Task getTaskById(int id) {
-        if (tasks.get(id) != null) {
-            historyManager.add(tasks.get(id));
-        }
-        return tasks.get(id);
+        Task task = Optional.ofNullable(tasks.get(id)).orElseThrow(() -> new NotFoundException("Error: task id:" + id + " not found"));
+        historyManager.add(task);
+        return task;
     }
 
     //delete task by id
@@ -151,10 +163,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     //get epics subtasks
     @Override
-    public ArrayList<Subtask> getEpicSubtasksById(int id) {
-        ArrayList<Subtask> epicSubtasks = new ArrayList<>();
-        epics.get(id).getSubtaskIds().forEach(subId -> epicSubtasks.add(subtasks.get(subId)));
-        return epicSubtasks;
+    public List<Subtask> getEpicSubtasksById(int id) {
+        return epics.get(id).getSubtaskIds().stream().map(subtasks::get).toList();
     }
 
     //changes epic status, depending on subtasks status
@@ -232,7 +242,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //delete subtasks by id
     //private method only for "delete com.yandex.app.model.Epic" cases
-    private void deleteSubtasksByIds(ArrayList<Integer> subtaskIds) {
+    private void deleteSubtasksByIds(List<Integer> subtaskIds) {
         subtaskIds.forEach(id -> {
             historyManager.remove(id);
             subtasks.remove(id);
@@ -253,5 +263,9 @@ public class InMemoryTaskManager implements TaskManager {
     //remove tasks from history by id
     private void removeTasksFromHistory(Set<Integer> taskIds) {
         taskIds.forEach(historyManager::remove);
+    }
+
+    public List<Task> getPrioritisedTasks() {
+        return prioritisedTasks.stream().toList();
     }
 }

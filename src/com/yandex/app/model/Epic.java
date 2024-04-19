@@ -6,9 +6,10 @@ import com.yandex.app.enums.Type;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    private final ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private final List<Integer> subtaskIds = new ArrayList<>();
     private ZonedDateTime endTime;
 
     public Epic(int id, String name, String description, Status status) {
@@ -35,12 +36,12 @@ public class Epic extends Task {
                 ", id=" + getId() +
                 ", subtaskIds=" + subtaskIds +
                 ", status=" + getStatus() +
-                ", duration=" + getDuration() +
+                ", duration=" + getDuration().toMinutes() +
                 ", startTime=" + getStartTime() +
                 '}';
     }
 
-    public ArrayList<Integer> getSubtaskIds() {
+    public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 

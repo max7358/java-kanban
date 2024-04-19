@@ -1,6 +1,8 @@
 package service;
 
 import com.yandex.app.enums.Status;
+import com.yandex.app.exception.NotFoundException;
+import com.yandex.app.exception.ValidationException;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
@@ -73,8 +75,7 @@ class InMemoryTaskManagerTest {
         Task task1 = new Task("task1", "task description1");
         taskManager.addTask(task1);
         taskManager.deleteTaskById(task1.getId());
-        Task deletedTask = taskManager.getTaskById(task1.getId());
-        Assertions.assertNull(deletedTask);
+        Assertions.assertThrows(NotFoundException.class, () -> taskManager.getTaskById(task1.getId()));
     }
 
     @Test
@@ -145,7 +146,7 @@ class InMemoryTaskManagerTest {
         Subtask subtask1 = new Subtask("subtask1", "task description1", epic1.getId());
         taskManager.addSubtask(subtask1);
 
-        ArrayList<Subtask> subtasks = taskManager.getEpicSubtasksById(epic1.getId());
+        List<Subtask> subtasks = taskManager.getEpicSubtasksById(epic1.getId());
         Assertions.assertEquals(1, subtasks.size());
         Assertions.assertEquals(subtasks.getFirst(), subtask1);
     }
@@ -205,7 +206,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void task_endTime_calculation() {
+    void taskEndTimeCalculation() {
         ZonedDateTime dateTime = ZonedDateTime.of(2024, 2, 28, 23, 20, 0, 0, ZoneOffset.UTC);
         ZonedDateTime expectedDateTime = ZonedDateTime.of(2024, 2, 29, 0, 21, 0, 0, ZoneOffset.UTC);
         Task task = new Task("task1", "task description", Status.NEW, Duration.ofMinutes(61), dateTime);
@@ -213,7 +214,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void epic_time_calculation() {
+    void epicTimeCalculation() {
         ZonedDateTime dateTime = ZonedDateTime.of(2024, 2, 28, 23, 20, 0, 0, ZoneOffset.UTC);
         Epic epic = new Epic("epic1", "task description");
         taskManager.addEpic(epic);
@@ -233,5 +234,27 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(expectedStartTime, epic.getStartTime());
         Assertions.assertEquals(expectedEndTime, epic.getEndTime());
         Assertions.assertEquals(Duration.ofMinutes(205), epic.getDuration());
+    }
+
+    @Test
+    void sortedTasks() {
+        //5:00 -> 5:30
+        Task task1 = new Task("task1", "task description", Status.NEW, Duration.ofMinutes(30),
+                ZonedDateTime.of(2024, 3, 10, 5, 0, 0, 0, ZoneOffset.UTC));
+        //6:00->6:30
+        Task task2 = new Task("task2", "task description", Status.NEW, Duration.ofMinutes(30),
+                ZonedDateTime.of(2024, 3, 10, 6, 0, 0, 0, ZoneOffset.UTC));
+        //7:00->8:00
+        Task task3 = new Task("task3", "task description", Status.NEW, Duration.ofMinutes(60),
+                ZonedDateTime.of(2024, 3, 10, 7, 0, 0, 0, ZoneOffset.UTC));
+
+        Task task4 = new Task("task4", "task description", Status.NEW, Duration.ofMinutes(10000),
+                ZonedDateTime.of(2024, 3, 10, 7, 59, 0, 0, ZoneOffset.UTC));
+        Task task10 = new Task("task10", "task description", Status.NEW);
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        taskManager.addTask(task3);
+        taskManager.addTask(task10);
+        Assertions.assertThrows(ValidationException.class, () -> taskManager.addTask(task4));
     }
 }
