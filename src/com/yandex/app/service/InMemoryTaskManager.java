@@ -17,7 +17,8 @@ public class InMemoryTaskManager implements TaskManager {
     HistoryManager historyManager;
     protected int idSeq = 0;
 
-    TreeSet<Task> prioritisedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    TreeSet<Task> prioritisedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime)
+            .thenComparing(Task::getDuration).thenComparing(Task::getId));
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         tasks = new HashMap<>();

@@ -83,18 +83,22 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
                 ZonedDateTime.of(2024, 3, 10, 5, 0, 0, 0, ZoneOffset.UTC));
         Task task2 = new Task("task2", "task description", Status.NEW, Duration.ofMinutes(30),
                 ZonedDateTime.of(2024, 3, 10, 6, 0, 0, 0, ZoneOffset.UTC));
-        Task task3 = new Task("task3", "task description", Status.NEW, Duration.ofMinutes(60),
+        Task task3 = new Task("task3", "task description", Status.NEW, Duration.ofMinutes(0),
+                ZonedDateTime.of(2024, 3, 10, 7, 0, 0, 0, ZoneOffset.UTC));
+        Task task4 = new Task("task4", "task description", Status.NEW, Duration.ofMinutes(1),
                 ZonedDateTime.of(2024, 3, 10, 7, 0, 0, 0, ZoneOffset.UTC));
         Task task10 = new Task("task10", "task description", Status.NEW);
         taskManager.addTask(task3);
+        taskManager.addTask(task4);
         taskManager.addTask(task2);
         taskManager.addTask(task10);
         taskManager.addTask(task1);
         List<Task> prioritisedTasks = taskManager.getPrioritisedTasks();
-        Assertions.assertEquals(3, prioritisedTasks.size());
+        Assertions.assertEquals(4, prioritisedTasks.size());
         Assertions.assertEquals(task1, prioritisedTasks.get(0));
         Assertions.assertEquals(task2, prioritisedTasks.get(1));
         Assertions.assertEquals(task3, prioritisedTasks.get(2));
+        Assertions.assertEquals(task4, prioritisedTasks.get(3));
     }
 
     @Test
