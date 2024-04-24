@@ -3,13 +3,21 @@ package com.yandex.app.model;
 import com.yandex.app.enums.Status;
 import com.yandex.app.enums.Type;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    private final ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private final List<Integer> subtaskIds = new ArrayList<>();
+    private ZonedDateTime endTime;
 
     public Epic(int id, String name, String description, Status status) {
         super(id, name, description, status);
+    }
+
+    public Epic(int id, String name, String description, Status status, Duration duration, ZonedDateTime startTime) {
+        super(id, name, description, status, duration, startTime);
     }
 
     public Epic(String name, String description, Status status) {
@@ -28,10 +36,12 @@ public class Epic extends Task {
                 ", id=" + getId() +
                 ", subtaskIds=" + subtaskIds +
                 ", status=" + getStatus() +
+                ", duration=" + getDuration().toMinutes() +
+                ", startTime=" + getStartTime() +
                 '}';
     }
 
-    public ArrayList<Integer> getSubtaskIds() {
+    public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 
@@ -46,5 +56,16 @@ public class Epic extends Task {
     @Override
     public Type getType() {
         return Type.EPIC;
+    }
+
+    @Override
+    public ZonedDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void calculateTime(ZonedDateTime start, ZonedDateTime end) {
+        setStartTime(start);
+        this.endTime = end;
+        setDuration(Duration.between(start, end));
     }
 }

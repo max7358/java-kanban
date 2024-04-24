@@ -1,7 +1,10 @@
-id,type,name,status,description,epic
-1,TASK,task1,NEW,task description,
-2,EPIC,epic1,IN_PROGRESS,task description,
-3,SUBTASK,subtask1,NEW,task description 1,2
-4,SUBTASK,subtask2,IN_PROGRESS,task description 1,2
+id,type,name,status,description,duration,startTime,epic
+1,TASK,task1,NEW,task description,0,null,
+7,TASK,task2,NEW,task description,31,2024-04-02T14:21:10.000000020Z,
+2,EPIC,epic1,IN_PROGRESS,task description,72,2024-04-01T11:20:10.000000010Z,
+3,EPIC,epic2,NEW,task description,0,null,
+4,SUBTASK,subtask1,NEW,task description 1,11,2024-04-01T11:20:10.000000010Z,2
+5,SUBTASK,subtask2,IN_PROGRESS,task description 1,12,2024-04-01T12:20:10.000000010Z,2
+6,SUBTASK,subtask3,DONE,task description 1,0,null,2
 
-1,2,3,4,
+1,7,2,3,4,5,6,
