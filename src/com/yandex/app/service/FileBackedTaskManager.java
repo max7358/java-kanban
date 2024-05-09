@@ -35,6 +35,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public FileBackedTaskManager(HistoryManager historyManager) {
         this(historyManager, Paths.get(CSV_FILE_NAME));
+        init();
     }
 
     public FileBackedTaskManager(Path path) {
@@ -89,6 +90,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 subtasks.put(task.getId(), (Subtask) task);
                 epics.get(((Subtask) task).getEpicId()).addSubtaskId(task.getId());
             }
+        }
+        if (task.getStartTime() != null && task.getType() != Type.EPIC) {
+            prioritisedTasks.add(task);
         }
     }
 
