@@ -1,6 +1,7 @@
 package service;
 
 import com.yandex.app.enums.Status;
+import com.yandex.app.exception.ManagerSaveException;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
@@ -15,6 +16,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Random;
 
 class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
@@ -24,7 +26,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
             Path taskManagerTestFile = Files.createTempFile("taskManagerTest", ".csv");
             return new FileBackedTaskManager(taskManagerTestFile);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException(e);
         }
     }
 
@@ -176,5 +178,14 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         Assertions.assertEquals(0, manager.getAllTasks().size());
         Assertions.assertEquals(0, manager.getAllEpics().size());
         Assertions.assertEquals(0, manager.getAllSubtasks().size());
+    }
+
+    @Test
+    void loadFromNonExistingFile() throws IOException {
+        String tmpdir = System.getProperty("java.io.tmpdir");
+        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(Paths.get(tmpdir + new Random().nextInt(100000) + "_testTaskData.csv"));
+        Assertions.assertEquals(0, manager.getAllTasks().size());
+        manager.addTask(new Task("task1", "task description"));
+        Assertions.assertEquals(1, manager.getAllTasks().size());
     }
 }

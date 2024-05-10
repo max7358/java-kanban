@@ -1,6 +1,7 @@
 package com.yandex.app.http;
 
 import com.sun.net.httpserver.HttpServer;
+import com.yandex.app.exception.ServerRunException;
 import com.yandex.app.http.handler.*;
 import com.yandex.app.service.TaskManager;
 import com.yandex.app.utility.Managers;
@@ -31,11 +32,13 @@ public class HttpTaskServer {
             server.createContext("/prioritized", new PrioritizedHandler(taskManager));
             server.start();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServerRunException(e.getMessage());
         }
     }
 
     public void stop() {
-        server.stop(0);
+        if (server != null) {
+            server.stop(0);
+        }
     }
 }

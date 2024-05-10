@@ -24,37 +24,36 @@ public class BaseHttpHandler {
     protected Gson gson;
 
     protected void sendText(HttpExchange h, String text) throws IOException {
-        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
-        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        h.sendResponseHeaders(200, resp.length);
-        h.getResponseBody().write(resp);
-        h.close();
+        sendResponse(h,200, text);
     }
 
     protected void sendNotFound(HttpExchange h, String text) throws IOException {
-        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
-        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        h.sendResponseHeaders(404, resp.length);
-        h.getResponseBody().write(resp);
-        h.close();
+        sendResponse(h,404, text);
     }
 
     protected void sendHasInteractions(HttpExchange h, String text) throws IOException {
-        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
-        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        h.sendResponseHeaders(406, resp.length);
-        h.getResponseBody().write(resp);
-        h.close();
+        sendResponse(h,406, text);
     }
 
     protected void sendCreated(HttpExchange h) throws IOException {
-        h.sendResponseHeaders(201, 0);
-        h.getResponseBody().close();
+        sendResponse(h,201);
     }
 
     protected void sendOK(HttpExchange h) throws IOException {
-        h.sendResponseHeaders(200, 0);
+        sendResponse(h,200);
+    }
+
+    private void sendResponse(HttpExchange h, int code) throws IOException {
+        h.sendResponseHeaders(code, 0);
         h.getResponseBody().close();
+    }
+
+    private void sendResponse(HttpExchange h, int code, String text) throws IOException {
+        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
+        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+        h.sendResponseHeaders(code, resp.length);
+        h.getResponseBody().write(resp);
+        h.close();
     }
 
     protected boolean isNumeric(String strNum) {
