@@ -16,7 +16,6 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Random;
 
 class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
@@ -182,8 +181,9 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     void loadFromNonExistingFile() throws IOException {
-        String tmpdir = System.getProperty("java.io.tmpdir");
-        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(Paths.get(tmpdir + new Random().nextInt(100000) + "_testTaskData.csv"));
+        Path taskManagerTestFile = Files.createTempFile("taskManagerTest", ".csv");
+        taskManagerTestFile = taskManagerTestFile.resolveSibling(taskManagerTestFile.getFileName()+".fail");
+        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(taskManagerTestFile);
         Assertions.assertEquals(0, manager.getAllTasks().size());
         manager.addTask(new Task("task1", "task description"));
         Assertions.assertEquals(1, manager.getAllTasks().size());
