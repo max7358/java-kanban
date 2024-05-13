@@ -1,11 +1,11 @@
 package service;
 
 import com.yandex.app.enums.Status;
+import com.yandex.app.exception.ManagerSaveException;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
 import com.yandex.app.service.FileBackedTaskManager;
-import com.yandex.app.service.InMemoryHistoryManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,12 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Override
     protected FileBackedTaskManager createTaskManager() {
-        return new FileBackedTaskManager(new InMemoryHistoryManager());
+        try {
+            Path taskManagerTestFile = Files.createTempFile("taskManagerTest", ".csv");
+            return new FileBackedTaskManager(taskManagerTestFile);
+        } catch (IOException e) {
+            throw new ManagerSaveException(e);
+        }
     }
 
     @Test
@@ -172,5 +177,15 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         Assertions.assertEquals(0, manager.getAllTasks().size());
         Assertions.assertEquals(0, manager.getAllEpics().size());
         Assertions.assertEquals(0, manager.getAllSubtasks().size());
+    }
+
+    @Test
+    void loadFromNonExistingFile() throws IOException {
+        Path taskManagerTestFile = Files.createTempFile("taskManagerTest", ".csv");
+        taskManagerTestFile = taskManagerTestFile.resolveSibling(taskManagerTestFile.getFileName()+".fail");
+        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(taskManagerTestFile);
+        Assertions.assertEquals(0, manager.getAllTasks().size());
+        manager.addTask(new Task("task1", "task description"));
+        Assertions.assertEquals(1, manager.getAllTasks().size());
     }
 }

@@ -192,16 +192,16 @@ public class InMemoryTaskManager implements TaskManager {
     //get epic by id
     @Override
     public Task getEpicById(int id) {
-        if (epics.get(id) != null) {
-            historyManager.add(epics.get(id));
-        }
-        return epics.get(id);
+        Epic epic = Optional.ofNullable(epics.get(id)).orElseThrow(() -> new NotFoundException("Error: epic id:" + id + " not found"));
+        historyManager.add(epic);
+        return epic;
     }
 
     //get epics subtasks
     @Override
     public List<Subtask> getEpicSubtasksById(int id) {
-        return epics.get(id).getSubtaskIds().stream().map(subtasks::get).toList();
+        Epic epic = Optional.ofNullable(epics.get(id)).orElseThrow(() -> new NotFoundException("Error: epic id:" + id + " not found"));
+        return epic.getSubtaskIds().stream().map(subtasks::get).toList();
     }
 
     //changes epic status, depending on subtasks status
@@ -294,6 +294,7 @@ public class InMemoryTaskManager implements TaskManager {
     //update epic
     @Override
     public Epic updateEpic(Epic epic) {
+        Optional.ofNullable(epics.get(epic.getId())).orElseThrow(() -> new NotFoundException("Error: epic id:" + epic.getId() + " not found"));
         epics.put(epic.getId(), epic);
         return epic;
     }
